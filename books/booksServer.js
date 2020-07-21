@@ -23,7 +23,7 @@ const server = new grpc.Server();
 server.addService(booksProto.BooksService.service, {
   CreateBook: (call, callback) => {
     console.log('call to CreateBook')
-
+    
     //sample will take the call information from the client(stub)
     const sampleAdd= {
       title: call.request.title, 
@@ -34,7 +34,10 @@ server.addService(booksProto.BooksService.service, {
     }
 //this actually sends data to booksController.
    controller.createBook(sampleAdd);
-    
+   console.log('now logging call.metadata ', call.metadata)
+   call.metadata._internal_repr.la.push('carmelo');
+   console.log("Internal rep: " , call.metadata._internal_repr);
+   call.sendMetadata(call.metadata);
 
 //Whatever gets passed in as the second argument will be sent back to the client.
     callback(
