@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 
 class horus {
   constructor(name) {
@@ -6,6 +8,7 @@ class horus {
     this.endTime = null;
     this.request = null;
     this.targetService = null; // represents the location to which the request was made
+    this.allRequests = []; // array which stores all requests
   }
 
   // start should be invoked before the request is made
@@ -30,8 +33,30 @@ class horus {
     if (metaData === 'none') this.request[this.targetService] = 'none';
     else {
       metaData = JSON.parse(metaData);
-      this.route[this.targetService] = metaData;
+      this.request[this.targetService] = metaData;
+      this.allRequests.push(this.request);
     }
+  }
+  // displayRequests logs to the console all stored requests 
+    // setTimeout builds in deliberate latency since metadata may often be sent before or after a request is done processing
+  displayRequests () {
+    setTimeout(() => {
+      console.log('\n\n');
+      console.log('Logging all requests from : ', this.serviceName)
+      this.allRequests.forEach((request) => {
+        console.log('\n'); 
+        console.log(request);
+      });
+      console.log('\n\n')
+    }, 1000)
+  }
+  writeToFile() {
+    for (let req of this.allRequests) {
+      
+    }
+    // fs.writeFileSync( file, data, options )
+    fs.writeFile('requestsFile.txt', )
+    
   }
 }
 

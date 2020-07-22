@@ -13,26 +13,16 @@ const book = {
 };
 
 let ht = new horusTracer('main');
-
-//Make a request from main initiator to books using booksStub.
-// const bStub = booksStub;
 let meta = new grpc.Metadata();
-// meta.add('la', 'lala');
-// meta.add('metadataArr', JSON.stringify({
-//         {"books": null, "responseTime": null}
-//     })
-// );
-meta.add('response', 'null')
+meta.add('response', 'null');
 
 function main() {
     ht.start('books');
     booksStub.CreateBook(book, meta, (error, response) => {
-
         ht.end();
-
     }).on('metadata', metadata => {
-        //console.log('metadata ', metadata.get('response')[0])
-        ht.journey(metadata.get('response')[0])
+        ht.grabTrace(metadata.get('response')[0]);
+        ht.displayRequests
     });
 }
 
