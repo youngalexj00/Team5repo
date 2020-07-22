@@ -34,20 +34,19 @@ server.addService(booksProto.BooksService.service, {
     }
     //this actually sends data to booksController.
     controller.createBook(sampleAdd);
-    
-    //construct new request to send back to the client
+  
     let meta = new grpc.Metadata()
 
     //mock intraservice request
-    let intraservice = true;
+    let intraservice = false;
     if (intraservice === false) meta.add('response', 'none')
     else if (intraservice === true) {
      let fakeReq = { customers: {}, responseTime: 12341421 }
-     fakeReq = JSON.stringify(fakeReq)
+     fakeReq = JSON.stringify(fakeReq);
      meta.add('response', fakeReq);
     }
     call.sendMetadata(meta);
-    
+
     callback(
       null,
       {

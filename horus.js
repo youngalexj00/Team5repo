@@ -6,7 +6,7 @@ class horus {
     this.serviceName = name; // represents the name of the microservices
     this.startTime = null;
     this.endTime = null;
-    this.request = null;
+    this.request = {};
     this.targetService = null; // represents the location to which the request was made
     this.allRequests = []; // array which stores all requests
   }
@@ -34,29 +34,50 @@ class horus {
     else {
       metaData = JSON.parse(metaData);
       this.request[this.targetService] = metaData;
-      this.allRequests.push(this.request);
     }
+    this.allRequests.push(this.request);
   }
   // displayRequests logs to the console all stored requests 
-    // setTimeout builds in deliberate latency since metadata may often be sent before or after a request is done processing
+    // setTimeout builds in deliberate latency since metadata may be sent before or after a request is done processing
   displayRequests () {
-    setTimeout(() => {
-      console.log('\n\n');
-      console.log('Logging all requests from : ', this.serviceName)
-      this.allRequests.forEach((request) => {
-        console.log('\n'); 
-        console.log(request);
-      });
-      console.log('\n\n')
-    }, 1000)
+    console.log('\n\n');
+    console.log('Logging all requests from : ', this.serviceName)
+    this.allRequests.forEach((request) => {
+      console.log('\n'); 
+      console.log(request);
+    });
+    console.log('\n\n')
   }
   writeToFile() {
+    let strRequests = '';
+    //[ {books: {orders: {}, responseTime: 3}, responseTime: 5}]
+    //[ {books: {orders: { Inventory: {}, responseTime: 1}, responseTime: 3}, responseTime: 5}]
+    //while object.keys is not an empty array
+    //Object.keys = [books]
+    //Object.values = [{orders: { Inventory: {}, responseTime: 2}, responseTime: 3}, 5];
+          
+
     for (let req of this.allRequests) {
-      
+      //Object.keys = [books]
+      //Object.values = [{orders: {}, responseTime: 3}, 5];
+      // First write to file - contains Total
+      // subsequent - chained requests
+      strRequests += `${Object.keys(req)[0]} (service) response received at: ${Object.values(req)[1]} ms (Total)`;
+      strRequests += '/n';
+      // while we dont hit an empty object on the 1st key, go inside
+      let innerObj = Object.values(req)[0];
+      while (innerObj) {
+        strRequests += `${Object.keys(innerObj)[0]} (service) response received at: ${Object.values(innerObj)[1]} ms`;
+        strRequests += '/n';
+        innerObj = Object.values(innerObj)[0];
+      }
+      // go inside 1st value of object recursively?
     }
     // fs.writeFileSync( file, data, options )
-    fs.writeFile('requestsFile.txt', )
-    
+    fs.writeFile('requestsFile.txt', strRequests, (err) => {
+      if (err) console.error(err);
+      console.log('The requests have been logged.');
+    });
   }
 }
 
