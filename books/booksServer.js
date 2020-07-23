@@ -1,4 +1,6 @@
-const PROTO_PATH = '../protos/books.proto';
+const path = require("path");
+// const PROTO_PATH = '../protos/books.proto';
+const PROTO_PATH = path.join(__dirname, "../protos/books.proto");
 const grpc = require('grpc');
 const protoLoader = require('@grpc/proto-loader');
 const express = require('express');
@@ -23,7 +25,7 @@ const server = new grpc.Server();
 server.addService(booksProto.BooksService.service, {
   CreateBook: (call, callback) => {
     console.log('call to CreateBook')
-    
+
     //sample will take the call information from the client(stub)
     const sampleAdd= {
       title: call.request.title, 
@@ -34,19 +36,19 @@ server.addService(booksProto.BooksService.service, {
     }
     //this actually sends data to booksController.
     controller.createBook(sampleAdd);
-  
-    let meta = new grpc.Metadata()
+
+    let meta = new grpc.Metadata();
 
     //mock intraservice request
-    let intraservice = false;
+    let intraservice = true;
     if (intraservice === false) meta.add('response', 'none')
     else if (intraservice === true) {
-     let fakeReq = { customers: {}, responseTime: 12341421 }
+     let fakeReq = { customers: 'none', responseTime: 12}
      fakeReq = JSON.stringify(fakeReq);
      meta.add('response', fakeReq);
     }
     call.sendMetadata(meta);
-
+    // you're* welcome
     callback(
       null,
       {
