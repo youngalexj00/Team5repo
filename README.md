@@ -106,7 +106,7 @@ npm install @horustracer/clientwrapper @horustracer/serverwrapper
 <br/>
 
 - Import the ClientWrapper from @horustracer/clientwrapper into your stub (gRPC client) file. 
-- Initialize a new instance of the ClientWrapper, passing in the gRPC client and service as the first two parameters. The third and fourth parameters are the name of service using the stub and the name of the file you want to output request data to. Parameters five is the connection link to your mongo database, which Horus will use to log requests. The final parameter is the link to your slack URL. 
+- Initialize a new instance of the ClientWrapper, passing in the gRPC client and service as the first two parameters. The third and fourth parameters are the name of the file you want to . Parameter five is the connection link to your mongo database, which Horus will use to log requests. The final parameter is the link to your slack URL. 
 - Then export the ClientWrapper in the place of your previous stub.
 
 ```js
@@ -130,7 +130,7 @@ const client = new BooksService (
   grpc.credentials.createInsecure()
 );
 
-const ClientWrapper = new HorusClientWrapper(client, BooksService, 'ProxyClient', 'books.txt', '<your mongoDB url>', '<your slack URL>');
+const ClientWrapper = new HorusClientWrapper(client, BooksService, 'books.txt', 'ProxyClient', '<your mongoDB url>', '<your slack URL>');
 
 module.exports = ClientWrapper;
 ```
@@ -201,8 +201,7 @@ Once you have completed this step for your intraservice requests, you're all don
 
 # Step-by-Step Tutorial 
 
-
-Installing Horus into your application is quick and easy. 
+This step by step tutorial provides an in depth walk through of installing Horus, offering helpful explanations for Horus's key features. 
 Follow the steps below to set up the <b>ClientWrapper</b>, <b>ServerWrapper</b>, and any <b>intraservice handshake functions</b> you may need.
 
 <br/>
@@ -222,16 +221,13 @@ Install the ClientWrapper by running npm install @horustracer/ClientWrapper. The
 
 ```js
 
-// run "npm install @horustracer/ClientWrapper" in your terminal
-const HorusClientWrapper = require('@horustracer/ClientWrapper')
+// run "npm install @horustracer/clientwrapper" in your terminal
+const HorusClientWrapper = require('@horustracer/clientwrapper')
 
 ```
 <br/>
 
-Now install and require in the grpc, @grpc.proto-loader, and path modules as you normally would. 
-Using grpc.proto-loader, we are dynamically generated code from the proto files. This is opposed to static generation of code using the protoc compiler.
-
-We installed the 'path' module to help us get the path of where the .proto file is located in your file system.
+Now install and require in the grpc, @grpc.proto-loader, and path modules. The grpc.proto-loader dynamically generates gRPC's source code from the proto files as opposed to using static generation with protoc compiler.
 
 <br/>
 
@@ -240,10 +236,10 @@ We installed the 'path' module to help us get the path of where the .proto file 
 // run "npm install grpc @grpc/proto-loader path" 
 
 const HorusClientWrapper = require('@horustracer/ClientWrapper');
-const grpc = require("grpc");
-const protoLoader = require("@grpc/proto-loader");
+const grpc = require('grpc');
+const protoLoader = require('@grpc/proto-loader');
 const path = require('path');
-const PROTO_PATH = path.join(__dirname, "../protos/books.proto");
+const PROTO_PATH = path.join(__dirname, '../protos/books.proto');
 
 ```
 <br/>
@@ -277,7 +273,8 @@ const client = new BooksService (
 ```
 <br/>
 
-Now create a new instance of the ClientWrapper, <b>passing in the client, service, and name of the text file </b> you want to log requests to. 
+Now create a new instance of the ClientWrapper. The first parameter should be your recently created gRPC client object, while your second should be your service from a few lines earlier. 
+
 Export the new instance of your ClientWrapper, rather than the gRPC client object.
 
 <br/>
