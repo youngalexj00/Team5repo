@@ -110,11 +110,11 @@ npm install @horustracer/clientwrapper @horustracer/serverwrapper
 - Then export the ClientWrapper in the place of your previous stub.
 
 ```js
-const HorusClientWrapper = require('@horustracer/ClientWrapper');
-const grpc = require("grpc");
-const protoLoader = require("@grpc/proto-loader");
+const HorusClientWrapper = require('@horustracer/clientwrapper');
+const grpc = require('grpc');
+const protoLoader = require('@grpc/proto-loader');
 const path = require('path');
-const PROTO_PATH = path.join(__dirname, "../protos/books.proto");
+const PROTO_PATH = path.join(__dirname, '../protos/books.proto');
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
   keepCase: true,
@@ -126,7 +126,7 @@ const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
 const BooksService = grpc.loadPackageDefinition(packageDefinition).BooksService;
 
 const client = new BooksService (
-  "localhost:30043",
+  'localhost:30043',
   grpc.credentials.createInsecure()
 );
 
@@ -143,11 +143,11 @@ module.exports = ClientWrapper;
 - Rather than invoking the server.addService method, create a new instance of the ServerWrapper, passing in the server, proto, and methods as arguments.
 
 ```js
-const HorusServerWrapper = require('@horustracer/ServerWrapper);
+const HorusServerWrapper = require('@horustracer/serverwrapper');
 const grpc = require('grpc');
-const protoLoader = require("@grpc/proto-loader");
+const protoLoader = require('@grpc/proto-loader');
 const path = require('path');
-const controller = require("./booksController.js");
+const controller = require('./booksController.js');
 const PROTO_PATH = path.join(__dirname, '../protos/books.proto');
 
 const ServerWrapper = new HorusServerWrapper(server, booksProto.BooksService.service, {
@@ -159,7 +159,7 @@ const ServerWrapper = new HorusServerWrapper(server, booksProto.BooksService.ser
     callback(null, result);
 })
 
-server.bind("127.0.0.1:30043", grpc.ServerCredentials.createInsecure());
+server.bind('127.0.0.1:30043', grpc.ServerCredentials.createInsecure());
 server.start();
 ```
 <br/>
@@ -171,7 +171,7 @@ server.start();
 - If you do, invoke the makeHandShakeWithServer method in your intraservice request's callback. The makeHandShakeWithServer method lives on the ClientWrapper. It's first argument is the ServerWrapper it's being invoked in and the second is the name of the intraservice request. (Remember because of part 1, your stub should be exporting the ClientWrapper rather than the gRPC client);
 
 ```js
-const HorusServerWrapper = require('@horustracer/ServerWrapper);
+const HorusServerWrapper = require('@horustracer/serverwrapper);
 const booksStub = require('../stubs/booksStubs.js)
 
 const CustomerServerWrapper = new HorusServerWrapper(server, customersProto.CustomersService.service, {
