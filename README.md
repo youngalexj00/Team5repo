@@ -106,7 +106,7 @@ npm install @horustracer/clientwrapper @horustracer/serverwrapper
 <br/>
 
 - Import the ClientWrapper from @horustracer/clientwrapper into your stub (gRPC client) file. 
-- Initialize a new instance of the ClientWrapper, passing in the gRPC client, service and output text file name. 
+- Initialize a new instance of the ClientWrapper, passing in the gRPC client and service as the first two parameters. The third and fourth parameters are the name of service using the stub and the name of the file you want to output request data to. Parameters five is the connection link to your mongo database, which Horus will use to log requests. The final parameter is the link to your slack URL. 
 - Then export the ClientWrapper in the place of your previous stub.
 
 ```js
@@ -130,7 +130,7 @@ const client = new BooksService (
   grpc.credentials.createInsecure()
 );
 
-const ClientWrapper = new HorusClientWrapper(client, BooksService, 'books.txt');
+const ClientWrapper = new HorusClientWrapper(client, BooksService, 'ProxyClient', 'books.txt', '<your mongoDB url>', '<your slack URL>');
 
 module.exports = ClientWrapper;
 ```
